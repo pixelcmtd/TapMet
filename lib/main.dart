@@ -9,13 +9,12 @@ double bpmFromSamples(final List<DateTime> samples) {
   if (samples.length < 2) return 0;
   final l = samples.reversed.map((x) => x.millisecondsSinceEpoch).toList();
   var y = l.removeAt(0);
-  final len = l.length;
-  var ms = 0.0;
-  for (final x in l) {
+  final ms = l.fold<double>(0, (ms, x) {
     ms += y - x;
     y = x;
-  }
-  return 1 / (ms / len / 1000 / 60);
+    return ms;
+  });
+  return 1 / (ms / l.length / 1000 / 60);
 }
 
 class MyApp extends StatelessWidget {
