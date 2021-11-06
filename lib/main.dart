@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -40,24 +42,30 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<DateTime> taps = [];
+  int _samples = 10;
+  List<DateTime> _taps = [];
 
   @override
   Widget build(BuildContext context) {
-    final bpm = bpmFromSamples(taps);
+    final bpm = bpmFromSamples(_taps.sublist(max(_taps.length - _samples, 0)));
     return Scaffold(
-      body: GestureDetector(
-        onTap: () => setState(() => taps.add(DateTime.now())),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'BPM: ${bpm.toStringAsFixed(1)} / ${(bpm / 2).toStringAsFixed(1)}',
-                style: const TextStyle(fontSize: 100),
-              ),
-            ],
-          ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'BPM: ${bpm.toStringAsFixed(1)} / ${(bpm / 2).toStringAsFixed(1)}',
+              style: const TextStyle(fontSize: 100),
+            ),
+            ElevatedButton(
+              child: const Text('Reset'),
+              onPressed: () => setState(() => _taps = []),
+            ),
+            ElevatedButton(
+              child: const Text('Tap'),
+              onPressed: () => setState(() => _taps.add(DateTime.now())),
+            ),
+          ],
         ),
       ),
     );
